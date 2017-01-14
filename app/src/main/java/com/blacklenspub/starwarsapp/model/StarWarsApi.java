@@ -1,4 +1,4 @@
-package com.blacklenspub.starwarsapp;
+package com.blacklenspub.starwarsapp.model;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

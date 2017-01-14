@@ -1,10 +1,13 @@
-package com.blacklenspub.starwarsapp;
+package com.blacklenspub.starwarsapp.home;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.blacklenspub.starwarsapp.R;
+import com.blacklenspub.starwarsapp.model.Film;
 
 import java.util.List;
 

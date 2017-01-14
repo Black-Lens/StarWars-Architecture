@@ -1,4 +1,4 @@
-package com.blacklenspub.starwarsapp;
+package com.blacklenspub.starwarsapp.model;
 
 public class Film {
     public long episodeId;

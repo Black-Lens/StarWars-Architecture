@@ -1,4 +1,4 @@
-package com.blacklenspub.starwarsapp;
+package com.blacklenspub.starwarsapp.model;
 
 import java.util.List;
 
