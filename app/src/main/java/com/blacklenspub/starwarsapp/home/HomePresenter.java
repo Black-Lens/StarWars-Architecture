@@ -4,41 +4,83 @@ import com.blacklenspub.starwarsapp.model.Apis;
 import com.blacklenspub.starwarsapp.model.Film;
 import com.blacklenspub.starwarsapp.model.FilmResponse;
 import com.blacklenspub.starwarsapp.model.StarWarsApi;
+import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class HomePresenter implements HomeContract.HomePresenter {
-    private HomeContract.HomeView view;
-    private StarWarsApi starWarsApi;
+public class HomePresenter extends MvpBasePresenter<HomeContract.HomeView> implements HomeContract.HomePresenter {
 
-    public HomePresenter(HomeContract.HomeView view) {
-        this.view = view;
+    private StarWarsApi starWarsApi;
+    private Call getAllFilmsNetworkCall;
+
+    public HomePresenter() {
         starWarsApi = Apis.getSwarWarsApi();
-        view.showTitle("All Star Wars Films");
     }
 
     @Override
     public void getAllFilms() {
-        view.showLoading();
-        starWarsApi.getAllFilms().enqueue(new Callback<FilmResponse>() {
+        showLoadingView();
+        requestAllFilmesFromApi();
+    }
+
+    private void requestAllFilmesFromApi() {
+        getAllFilmsNetworkCall = starWarsApi.getAllFilms();
+        getAllFilmsNetworkCall.enqueue(new Callback<FilmResponse>() {
+
             @Override
             public void onResponse(Call<FilmResponse> call, Response<FilmResponse> response) {
-                view.showAllFilms(response.body().results);
-                view.hideLoading();
+                hideLoadingView();
+                showAllFilmsView(response.body().results);
             }
 
             @Override
             public void onFailure(Call<FilmResponse> call, Throwable t) {
-                view.showMessage(t.getMessage());
-                view.hideLoading();
+                hideLoadingView();
+                showErrorView(t.getMessage());
             }
         });
     }
 
+    private void showLoadingView() {
+        if (isViewAttached()) {
+            getView().showLoading();
+        }
+    }
+
+    private void hideLoadingView() {
+        if (isViewAttached()) {
+            getView().hideLoading();
+        }
+    }
+
+    private void showAllFilmsView(List<Film> films) {
+        if (isViewAttached()) {
+            getView().showAllFilms(films);
+        }
+    }
+
+    private void showErrorView(String errorMessage) {
+        if (isViewAttached()) {
+            getView().showErrorMessage(errorMessage);
+        }
+    }
+
     @Override
     public void onFilmItemClicked(Film film) {
-        view.navigateToFilmPage(film);
+        if (isViewAttached()) {
+            getView().navigateToFilmPage(film);
+        }
+    }
+
+    @Override
+    public void detachView(boolean retainInstance) {
+        super.detachView(retainInstance);
+        if (!retainInstance && !getAllFilmsNetworkCall.isCanceled()) {
+            getAllFilmsNetworkCall.cancel();
+        }
     }
 }

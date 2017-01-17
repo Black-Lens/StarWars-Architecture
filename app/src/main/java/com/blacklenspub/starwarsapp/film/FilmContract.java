@@ -1,14 +1,18 @@
 package com.blacklenspub.starwarsapp.film;
 
+import com.hannesdorfmann.mosby.mvp.MvpView;
+
 public interface FilmContract {
-    interface FilmView {
+
+    interface FilmView extends MvpView {
+
         void showLoading();
 
         void hideLoading();
 
-        void showMessage(String message);
+        void showErrorMessage(String message);
 
-        void showTitle(String title);
+        void showFilmTitle(String title);
 
         void showReleaseDate(String dateString);
 
@@ -18,6 +22,7 @@ public interface FilmContract {
     }
 
     interface FilmPresenter {
-        void getFilm();
+
+        void getFilm(long filmId);
     }
 }

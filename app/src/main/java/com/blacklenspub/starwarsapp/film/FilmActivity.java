@@ -1,17 +1,18 @@
 package com.blacklenspub.starwarsapp.film;
 
+import com.blacklenspub.starwarsapp.R;
+import com.hannesdorfmann.mosby.mvp.MvpActivity;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.blacklenspub.starwarsapp.R;
-
-public class FilmActivity extends AppCompatActivity implements FilmContract.FilmView {
+public class FilmActivity extends MvpActivity<FilmContract.FilmView, FilmPresenter> implements FilmContract.FilmView {
 
     private static final String KEY_FILM_ID = "FILM_ID";
 
@@ -25,20 +26,25 @@ public class FilmActivity extends AppCompatActivity implements FilmContract.Film
     TextView tvDirector;
     TextView tvCrawl;
     ProgressBar progressBar;
-    FilmPresenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_film);
+        initLayoutWidgets();
+        long filmId = getIntent().getLongExtra(KEY_FILM_ID, 0);
+        presenter.getFilm(filmId);
+    }
+
+    private void initLayoutWidgets() {
         tvReleaseDate = (TextView) findViewById(R.id.tvReleaseDate);
         tvDirector = (TextView) findViewById(R.id.tvDirector);
         tvCrawl = (TextView) findViewById(R.id.tvCrawl);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
-        long episodeId = getIntent().getLongExtra(KEY_FILM_ID, 0);
+    }
 
-        presenter = new FilmPresenter(this, episodeId);
-        presenter.getFilm();
+    @NonNull @Override public FilmPresenter createPresenter() {
+        return new FilmPresenter();
     }
 
     @Override
@@ -52,12 +58,12 @@ public class FilmActivity extends AppCompatActivity implements FilmContract.Film
     }
 
     @Override
-    public void showMessage(String message) {
-        Toast.makeText(FilmActivity.this, message, Toast.LENGTH_SHORT).show();
+    public void showErrorMessage(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public void showTitle(String title) {
+    public void showFilmTitle(String title) {
         setTitle(title);
     }
 
