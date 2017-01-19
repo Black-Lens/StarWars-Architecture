@@ -6,14 +6,33 @@
     android:layout_height="match_parent"
     tools:context="com.blacklenspub.starwarsapp.home.MainActivity">
 
+    <!-- Loading View -->
+    <TextView
+            android:id="@+id/loadingView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="8dp"
+            android:gravity="center"
+            android:text="Loading ..."/>
+
+    <!-- Content View -->
     <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/srl"
+        android:id="@+id/contentView"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/rvFilms"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+                android:id="@+id/rvFilms"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                />
     </android.support.v4.widget.SwipeRefreshLayout>
+
+    <!-- Error view -->
+    <TextView
+        android:id="@+id/errorView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"/>
+
 </FrameLayout>

@@ -29,42 +29,32 @@ public class FilmPresenter extends MvpBasePresenter<FilmContract.FilmView> imple
         getFilmNetworkCall.enqueue(new Callback<Film>() {
             @Override
             public void onResponse(Call<Film> call, Response<Film> response) {
-                hideLoadingView();
                 showFilmDetailsView(response.body());
             }
 
             @Override
             public void onFailure(Call<Film> call, Throwable t) {
-                hideLoadingView();
-                showErrorView(t.getMessage());
+                showErrorView(t);
             }
         });
     }
 
     private void showLoadingView() {
         if (isViewAttached()) {
-            getView().showLoading();
-        }
-    }
-
-    private void hideLoadingView() {
-        if (isViewAttached()) {
-            getView().hideLoading();
+            getView().showLoading(false);
         }
     }
 
     private void showFilmDetailsView(Film film) {
         if (isViewAttached()) {
-            getView().showFilmTitle(film.title);
-            getView().showReleaseDate(film.releaseDate);
-            getView().showDirector(film.director);
-            getView().showCrawl(film.openingCrawl);
+            getView().setData(film);
+            getView().showContent();
         }
     }
 
-    private void showErrorView(String errorMessage) {
+    private void showErrorView(Throwable t) {
         if (isViewAttached()) {
-            getView().showErrorMessage(errorMessage);
+            getView().showError(t, false);
         }
     }
 

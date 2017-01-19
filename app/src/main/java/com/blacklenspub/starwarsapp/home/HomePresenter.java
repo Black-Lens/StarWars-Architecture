@@ -22,50 +22,43 @@ public class HomePresenter extends MvpBasePresenter<HomeContract.HomeView> imple
     }
 
     @Override
-    public void getAllFilms() {
-        showLoadingView();
-        requestAllFilmesFromApi();
+    public void getAllFilms(boolean pullToRefrech) {
+        showLoadingView(pullToRefrech);
+        requestAllFilmesFromApi(pullToRefrech);
     }
 
-    private void requestAllFilmesFromApi() {
+    private void requestAllFilmesFromApi(final boolean pullToRefresh) {
         getAllFilmsNetworkCall = starWarsApi.getAllFilms();
         getAllFilmsNetworkCall.enqueue(new Callback<FilmResponse>() {
 
             @Override
             public void onResponse(Call<FilmResponse> call, Response<FilmResponse> response) {
-                hideLoadingView();
-                showAllFilmsView(response.body().results);
+                    showAllFilmsView(response.body().results);
             }
 
             @Override
             public void onFailure(Call<FilmResponse> call, Throwable t) {
-                hideLoadingView();
-                showErrorView(t.getMessage());
+                showErrorView(t, pullToRefresh);
             }
         });
     }
 
-    private void showLoadingView() {
+    private void showLoadingView(boolean pullToRefresh) {
         if (isViewAttached()) {
-            getView().showLoading();
-        }
-    }
-
-    private void hideLoadingView() {
-        if (isViewAttached()) {
-            getView().hideLoading();
+            getView().showLoading(pullToRefresh);
         }
     }
 
     private void showAllFilmsView(List<Film> films) {
         if (isViewAttached()) {
-            getView().showAllFilms(films);
+            getView().setData(films);
+            getView().showContent();
         }
     }
 
-    private void showErrorView(String errorMessage) {
+    private void showErrorView(Throwable t, boolean pullToRefresh) {
         if (isViewAttached()) {
-            getView().showErrorMessage(errorMessage);
+            getView().showError(t, pullToRefresh);
         }
     }
 

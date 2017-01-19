@@ -1,18 +1,18 @@
 package com.blacklenspub.starwarsapp.film;
 
 import com.blacklenspub.starwarsapp.R;
-import com.hannesdorfmann.mosby.mvp.MvpActivity;
+import com.blacklenspub.starwarsapp.model.Film;
+import com.hannesdorfmann.mosby.mvp.lce.MvpLceActivity;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.view.View;
-import android.widget.ProgressBar;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-public class FilmActivity extends MvpActivity<FilmContract.FilmView, FilmPresenter> implements FilmContract.FilmView {
+public class FilmActivity extends MvpLceActivity<LinearLayout, Film, FilmContract.FilmView, FilmPresenter> implements FilmContract
+        .FilmView {
 
     private static final String KEY_FILM_ID = "FILM_ID";
 
@@ -25,60 +25,41 @@ public class FilmActivity extends MvpActivity<FilmContract.FilmView, FilmPresent
     TextView tvReleaseDate;
     TextView tvDirector;
     TextView tvCrawl;
-    ProgressBar progressBar;
+
+    private long filmId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_film);
         initLayoutWidgets();
-        long filmId = getIntent().getLongExtra(KEY_FILM_ID, 0);
-        presenter.getFilm(filmId);
+        filmId = getIntent().getLongExtra(KEY_FILM_ID, 0);
+        loadData(false);
     }
 
     private void initLayoutWidgets() {
         tvReleaseDate = (TextView) findViewById(R.id.tvReleaseDate);
         tvDirector = (TextView) findViewById(R.id.tvDirector);
         tvCrawl = (TextView) findViewById(R.id.tvCrawl);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
     }
 
     @NonNull @Override public FilmPresenter createPresenter() {
         return new FilmPresenter();
     }
 
-    @Override
-    public void showLoading() {
-        progressBar.setVisibility(View.VISIBLE);
+    @Override protected String getErrorMessage(Throwable e, boolean pullToRefresh) {
+        return e.getMessage();
     }
 
-    @Override
-    public void hideLoading() {
-        progressBar.setVisibility(View.GONE);
+    @Override public void setData(Film film) {
+        setTitle(film.title);
+        tvReleaseDate.setText(film.releaseDate);
+        tvDirector.setText(film.director);
+        tvCrawl.setText(film.openingCrawl);
     }
 
-    @Override
-    public void showErrorMessage(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    @Override public void loadData(boolean pullToRefresh) {
+        presenter.getFilm(filmId);
     }
 
-    @Override
-    public void showFilmTitle(String title) {
-        setTitle(title);
-    }
-
-    @Override
-    public void showReleaseDate(String dateString) {
-        tvReleaseDate.setText(dateString);
-    }
-
-    @Override
-    public void showDirector(String director) {
-        tvDirector.setText(director);
-    }
-
-    @Override
-    public void showCrawl(String crawl) {
-        tvCrawl.setText(crawl);
-    }
 }

@@ -4,6 +4,7 @@ import com.blacklenspub.starwarsapp.R;
 import com.blacklenspub.starwarsapp.film.FilmActivity;
 import com.blacklenspub.starwarsapp.model.Film;
 import com.hannesdorfmann.mosby.mvp.MvpActivity;
+import com.hannesdorfmann.mosby.mvp.lce.MvpLceActivity;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,7 +16,8 @@ import android.widget.Toast;
 import java.util.List;
 
 // TODO : rename this to HomeActivity
-public class MainActivity extends MvpActivity<HomeContract.HomeView, HomePresenter> implements HomeContract.HomeView {
+public class MainActivity extends MvpLceActivity<SwipeRefreshLayout, List<Film>, HomeContract.HomeView, HomePresenter> implements
+        HomeContract.HomeView {
 
     RecyclerView recyclerView;
     SwipeRefreshLayout swipeRefreshLayout;
@@ -27,7 +29,7 @@ public class MainActivity extends MvpActivity<HomeContract.HomeView, HomePresent
         setContentView(R.layout.activity_main);
         setTitle("All Star Wars Films");
         initLayoutWidgets();
-        presenter.getAllFilms();
+        loadData(false);
     }
 
     private void initLayoutWidgets() {
@@ -41,11 +43,11 @@ public class MainActivity extends MvpActivity<HomeContract.HomeView, HomePresent
         });
         recyclerView.setAdapter(filmAdapter);
 
-        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.srl);
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.contentView);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                presenter.getAllFilms();
+                loadData(true);
             }
         });
     }
@@ -54,24 +56,26 @@ public class MainActivity extends MvpActivity<HomeContract.HomeView, HomePresent
         return new HomePresenter();
     }
 
-    @Override
-    public void showLoading() {
-        swipeRefreshLayout.setRefreshing(true);
+    @Override public void loadData(boolean pullToRefresh) {
+        presenter.getAllFilms(pullToRefresh);
     }
 
-    @Override
-    public void hideLoading() {
-        swipeRefreshLayout.setRefreshing(false);
+    @Override public void setData(List<Film> data) {
+        filmAdapter.setFilms(data);
     }
 
-    @Override
-    public void showErrorMessage(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    @Override public void showContent() {
+        super.showContent();
+        contentView.setRefreshing(false);
     }
 
-    @Override
-    public void showAllFilms(List<Film> films) {
-        filmAdapter.setFilms(films);
+    @Override protected String getErrorMessage(Throwable e, boolean pullToRefresh) {
+        return e.getMessage();
+    }
+
+    @Override public void showError(Throwable t, boolean pullToRefresh) {
+        super.showError(t, pullToRefresh);
+        contentView.setRefreshing(false);
     }
 
     @Override

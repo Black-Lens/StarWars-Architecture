@@ -1,24 +1,12 @@
 package com.blacklenspub.starwarsapp.film;
 
-import com.hannesdorfmann.mosby.mvp.MvpView;
+import com.blacklenspub.starwarsapp.model.Film;
+import com.hannesdorfmann.mosby.mvp.lce.MvpLceView;
 
 public interface FilmContract {
 
-    interface FilmView extends MvpView {
-
-        void showLoading();
-
-        void hideLoading();
-
-        void showErrorMessage(String message);
-
-        void showFilmTitle(String title);
-
-        void showReleaseDate(String dateString);
-
-        void showDirector(String director);
-
-        void showCrawl(String crawl);
+    // TODO : Do you need model for View layer?
+    interface FilmView extends MvpLceView<Film> {
     }
 
     interface FilmPresenter {
