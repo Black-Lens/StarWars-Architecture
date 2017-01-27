@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         filmAdapter = new FilmAdapter(new ArrayList<Film>(), new FilmAdapter.OnFilmClickListener() {
             @Override
             public void onFilmClicked(Film film) {
-                FilmActivity.start(MainActivity.this, film.getEpisodeId());
+                FilmActivity.Companion.start(MainActivity.this, film.getEpisodeId());
             }
         });
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
