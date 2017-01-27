@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         starWarsApi.getAllFilms().enqueue(new Callback<FilmResponse>() {
             @Override
             public void onResponse(Call<FilmResponse> call, Response<FilmResponse> response) {
-                filmAdapter.setFilms(response.body().results);
+                filmAdapter.setFilms(response.body().getResults());
                 swipeRefreshLayout.setRefreshing(false);
             }
 
