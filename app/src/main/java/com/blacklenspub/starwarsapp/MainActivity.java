@@ -11,6 +11,8 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.util.ArrayList;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -33,9 +35,9 @@ public class MainActivity extends AppCompatActivity {
 
         setTitle("All Star Wars Films");
 
-        filmAdapter = new FilmAdapter(null, new FilmAdapter.OnFilmClickListener() {
+        filmAdapter = new FilmAdapter(new ArrayList<Film>(), new FilmAdapter.OnFilmClickListener() {
             @Override
-            public void onFilmClick(Film film) {
+            public void onFilmClicked(Film film) {
                 FilmActivity.start(MainActivity.this, film.getEpisodeId());
             }
         });
@@ -67,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<FilmResponse> call, Response<FilmResponse> response) {
                 filmAdapter.setFilms(response.body().getResults());
+                filmAdapter.notifyDataSetChanged();
                 swipeRefreshLayout.setRefreshing(false);
             }
 
