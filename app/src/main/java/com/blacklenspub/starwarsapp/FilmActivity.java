@@ -61,10 +61,10 @@ public class FilmActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Film> call, Response<Film> response) {
                 Film film = response.body();
-                setTitle(film.title);
-                tvReleaseDate.setText(film.releaseDate);
-                tvDirector.setText(film.director);
-                tvCrawl.setText(film.openingCrawl);
+                setTitle(film.getTitle());
+                tvReleaseDate.setText(film.getReleaseDate());
+                tvDirector.setText(film.getDirector());
+                tvCrawl.setText(film.getOpeningCrawl());
                 progressBar.setVisibility(View.GONE);
             }
 

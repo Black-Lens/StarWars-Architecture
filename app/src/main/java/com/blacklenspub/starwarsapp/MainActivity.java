@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         filmAdapter = new FilmAdapter(null, new FilmAdapter.OnFilmClickListener() {
             @Override
             public void onFilmClick(Film film) {
-                FilmActivity.start(MainActivity.this, film.episodeId);
+                FilmActivity.start(MainActivity.this, film.getEpisodeId());
             }
         });
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
