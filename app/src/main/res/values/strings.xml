@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">StarWarsApp</string>
+    <string name="default_app_title">All Star Wars Films</string>
 </resources>

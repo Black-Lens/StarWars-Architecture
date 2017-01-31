@@ -36,7 +36,7 @@ class FilmActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_film)
         retrieveIntentData()
-        prepareApi()
+        setUpApi()
         loadData()
     }
 
@@ -44,7 +44,7 @@ class FilmActivity : AppCompatActivity() {
         episodeId = intent.getLongExtra(KEY_FILM_ID, 0L)
     }
 
-    private fun prepareApi() {
+    private fun setUpApi() {
         val gson = GsonBuilder()
                 .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                 .create()
